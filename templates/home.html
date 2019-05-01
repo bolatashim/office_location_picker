@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Flask Tutorial</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static',    filename='css/template.css') }}"> -->
+    <link rel="stylesheet" href="https://www.koolchart.com/demo/KoolChart/Assets/Css/KoolChart.css"/>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+
+<style type="text/css">
+  p {
+    font-size: 16px;
+  };
+  hr {
+  border: 1;
+  clear:both;
+  display:block;
+  width: 100%;               
+  background-color:gray;
+  height: 2px;
+  opacity: 0.3;
+  margin-top: 20px !important;
+}
+</style>
+  </head>
+  <body>
+      
+    <!-- <canvas id="stars_count_chart" style="width: 500px !important"></canvas> -->
+    <!-- <canvas id="stars_by_state_chart" style="width: 500px !important"></canvas> -->
+    
+    
+
+    
+
+    <div class="container">
+      <div class="row">
+        <h1> Office Location Picker (Yanolja Project by Bolat Ashim)</h1>
+        
+        <div class="col-md-12">
+          <br><br>
+          <h3 class="text-center">Background</h3>
+            <br>
+            <p>
+              During the summer of 2018, I worked as a Deep Learning intern at a startup called Crazing Lab. (part of Comotomo Inc). The first half of this internship program was in Seoul, and the second half was in Sunnyvale, California. For a period of 1 month I worked at the office of this company in the United States. It was my first time in the Silicon valley, and I greatly enjoyed staying at the most "Techy" region in world. I really enjoyed the tech atmosphere as well as the weather there.
+            </p>
+            <p>
+              However, there was one problem with the location of the office. It is known that a lot of the people in the Bay Area use cars to move around, so the system public transport there is very baf and is barely used by anybody. I did not have a car, or rather I did not even have a driver's licence in begin with, and the best lunch place within the radius of 1-2 km from my office only had 3 stars on Yelp :(. Consequently, everyone who had a car would go elsewhere to have lunch, and only those without cars had to do with whatever was available.
+            </p>
+            <p>
+              With the above, and given that lunch breaks are some of the greatest chances for workmates to socialize and network, I think it is important for a business to choose a good location for their offices (not considering companies with their own cafeterias). Furthermore, provided that services such as Yelp have been hugely successful due to the reliability of their crowdsourced reviews and rankings, I decided to make use of the publicly available Yelp data to make a web application for businesses to help choose good office locations.
+            </p>
+            <p>
+              The homepage contains information on how the data was analyzed and explanation on why a certain approach was chosen. At the bottom of this page one can find the button to proceed to viewing of the application (localhost:5000/application). Spring-Local with Python was used for data processing under the hood, and Flask to provide a passageway for cotrolling and managing of the web application.
+            </p>
+            <br><br>
+        </div>
+
+        <br><br>
+        <h3 class="text-center">Business Star Ratings Analysis</h3>
+
+
+        <div class="col-md-12">
+          <div class="col-md-6 text-center">
+            <br>
+            <h4>Number of reviews by stars</h4>
+            <canvas id="stars_count_chart"></canvas>
+          </div>
+          <div class="col-md-6">
+            <br>
+            <br>
+            <br>
+            <p>The given bar chart refers to the numbers of stars given to different businesses by Yelp users. As can be seen, the most frequent star rating is 4.0, follwed by 3.5 and 4.5 and the rest. Based on the this information, I chose to categorize the star ratings into 3 groups shown below,</p>
+            <p><span style="color: 'green' !important;">GREEN</span> : 4.0 - 5.0 stars range for "Best" businesses</p>
+            <p><span style="color: 'yello'">YELLOW</span> : 3.0 - 4.0 stars range for "Good" businesses</p>
+            <p><span style="color: 'red'">RED</span> : 0.0-3.0 stars range for "Unsatisfactory" businesses</p>
+            <p>As can be seen on the chart, these 3 categories would have relatively significant numbers of businesses in them.</p>
+          </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+
+
+        <div class="col-md-12">
+          <div class="col-md-6 text-center">
+            <br><br><br>
+            <h4>Stars count by state</h4>
+            <canvas id="stars_state_count_chart"></canvas>
+          </div>
+          <div class="col-md-6 text-center">
+            <br><br><br>
+            <h4>Average stars by state</h4>
+            <canvas id="stars_state_mean_chart"></canvas>
+          </div>
+
+        </div>
+
+
+        <br>
+        <hr>
+        <br>
+
+
+        <div class="col-md-12 ">
+          <br><br>
+            <p>Yelp public data is limited to primarily North American cities, with the numbers of star ratings given to businesses across different states shown above on the left. There is a significant deviation in the total number of ratings amongst different states, potentially due to major cities being located in some states and not the others, or simply due to that information not being publicly available.</p>
+            <p>That said, as can be seen from the chart on the top right, the average business star ratings across different states are remarkably similar, all the states averaging at around 3.5 stars. Given this, I presume the deviation in the absolute numbers of businesses in certain states would not be a hurdle in the proper functioning of the application</p>
+            <br><br><br><br>
+        </div>
+        <br>
+        <hr>
+        <br>
+
+        <h3 class="text-center">Business Categories Analysis</h3>
+        <div class="col-md-12">
+          <div class="col-md-6 text-center">
+            <br><br>
+            <h4>Frequency word cloud across all businesses</h4>
+            <div id="allWordsCloudHolder" style="height:400px; width:100%;"></div>
+            <br><br>
+          </div>
+          <div class="col-md-6 text-center">
+            <br><br>
+            <h4>Frequency word cloud across food/drink businesses</h4>
+            <div id="foodWordsCloudHolder" style="height:400px; width:100%;"></div>
+          </div>  
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div class="col-md-12">
+          <br><br>
+          <p>
+            Yelp allows businesses to select tags (aka categories in the given dataset) for distinguishing the type of the business. Each business chooses a number of relevant tags to be associated with it, and it can later be used while searching. The word cloud on the top left demonstrates the breakdown of tags across all businesses in the Yelp academic dataset. It is immediately evident that businesses registered at Yelp are primarily restaurants and cafes. Still, there are certain categories such as Spas or Medical that appear significantly frequently.</p>
+          <p>
+            With my project being focused on places for eating and drinking, I decided to filter out the dataset based on the existence of the keywords "food" and "drink" in the categories of businesses. It happens to be the case that the vast majority of the corresponding businesses carry these generic tags. The word cloud after applying the filter is shown on top right.
+          </p>
+          <br><br><br><br>
+        </div>
+
+
+        <div class="col-md-12">
+          <div class="col-md-6 text-center">
+            <h4>Distribution of reviews by length</h4>
+            <canvas id="review_length_count_chart"></canvas>
+          </div>
+          <div class="col-md-6">
+            <p>
+              The longer a review, the more information one can retrieve out of it. As can be seen on the chart to the left, the vast majority of the reviews given are on the shorter side of the spectrum, but still, a large number of reviews (some ~50k) belong to the 3000-5000 charaters group. With this, it could be possible could gain some useful insight into the businesses.</p>
+            <p>
+              I decided to make use of TF-IDF information retrieaval technique in my application. ML library of spark provides functionality to operate this technique. By separating each review into its corresponding sentences, tokenizing them, clearing redundant words and evaluating their rank across the corpus, I include a number of sentences from reviews for a given location selected by the user in the application.
+            </p>
+            <p>With this, let's proceed to the demonstration of the application by clicking on the button below!</p>
+            <br><br><br><br>
+          </div>
+
+        </div>
+
+
+
+        <div class="col-md-12 text-center">
+          <input class="btn btn-primary btn-lg" type="submit" value="GO TO APPLICATION" onclick="window.location.href='/application'">
+          <br><br><br><br><br><br>
+        </div>
+
+
+        
+        
+      </div>
+      
+    </div>
+
+
+    <!-- <canvas id="myChart"></canvas> -->
+    <!-- <canvas id="myChart"></canvas> -->
+    <!-- <canvas id="myChart"></canvas> -->
+    <!-- <canvas id="myChart"></canvas> -->
+    <!-- <canvas id="myChart"></canvas> -->
+
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://www.koolchart.com/demo/LicenseKey/codepen/KoolChartLicense.js"></script>
+  <script src="https://www.koolchart.com/demo/KoolChart/JS/KoolChart.js"></script>
+ 	
+  <script type="text/javascript">
+    // var states = '{{states}}';
+    // console.log(states);
+    var stars_mean_val = '{{stars_mean_val}}';
+    var stars_list = '{{stars_list}}';
+    var stars_count_list = '{{stars_count_list}}';
+    var stars_state_list = '{{stars_state_list}}';
+    var stars_state_mean_list = '{{stars_state_mean_list}}';
+    var stars_state_count_list = '{{stars_state_count_list}}';
+    var all_word_cloud_words = '{{all_word_cloud_words}}'
+    var all_word_cloud_counts = '{{all_word_cloud_counts}}';
+    var food_word_cloud_words = '{{food_word_cloud_words}}';
+    var food_word_cloud_counts = '{{food_word_cloud_counts}}';
+    var review_length_label = '{{review_length_label_string}}'
+    var review_length_label_count = '{{review_length_label_count}}';
+
+
+    
+    stars_mean_val = parseFloat(stars_mean_val);
+    stars_list = JSON.parse(stars_list);
+    stars_count_list = JSON.parse(stars_count_list);
+    
+    stars_state_list = stars_state_list.split(",");
+    stars_state_list = stars_state_list.slice(0, stars_state_list.length - 1);
+    
+    console.log(all_word_cloud_words);
+    all_word_cloud_words = all_word_cloud_words.split("%");
+    all_word_cloud_words = all_word_cloud_words.slice(0, all_word_cloud_words.length - 1);
+    
+    food_word_cloud_words = food_word_cloud_words.split("%");
+    food_word_cloud_words = food_word_cloud_words.slice(0, food_word_cloud_words.length - 1);
+
+    review_length_label = review_length_label.split("%");
+    review_length_label = review_length_label.slice(0, review_length_label.length - 2);
+
+    stars_state_mean_list = JSON.parse(stars_state_mean_list);
+    stars_state_count_list = JSON.parse(stars_state_count_list);
+    
+    all_word_cloud_counts = JSON.parse(all_word_cloud_counts);
+    food_word_cloud_counts = JSON.parse(food_word_cloud_counts);
+    review_length_label_count = JSON.parse(review_length_label_count);
+    review_length_label_count = review_length_label_count.slice(0, review_length_label_count.length - 1)
+
+    // console.log(stars_mean_val);
+    // console.log(stars_list);
+    // console.log(stars_count_list);
+    // console.log(stars_state_list);
+    // console.log(stars_state_mean_list);
+    // console.log(stars_state_count_list);
+    // console.log(all_word_cloud_counts);
+    // console.log(all_word_cloud_words);
+    console.log(review_length_label);
+    console.log(review_length_label_count);
+
+    var ctx_stars_count = document.getElementById('stars_count_chart').getContext('2d');
+    var chart_stars_count = new Chart(ctx_stars_count, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+            labels: stars_list.reverse(),
+            datasets: [{
+                label: 'Stars Count',
+                backgroundColor: 'rgb(240, 99, 150)',
+                borderColor: 'rgb(240, 99, 150)',
+                data: stars_count_list.reverse()
+            }]
+        },
+        // Configuration options go here
+        options: {}
+    });
+
+
+    var ctx_stars_state_count = document.getElementById('stars_state_count_chart').getContext('2d');
+    var chart_stars_state_count = new Chart(ctx_stars_state_count, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+            labels: stars_state_list,
+            datasets: [{
+                label: 'Stars Count by State',
+                backgroundColor: 'rgb(100, 150, 160)',
+                borderColor: 'rgb(100, 150, 160)',
+                data: stars_state_count_list
+            }]
+        },
+        // Configuration options go here
+        options: {
+        }
+
+    });
+
+
+    var ctx_stars_state_mean = document.getElementById('stars_state_mean_chart').getContext('2d');
+    var chart_stars_state_mean = new Chart(ctx_stars_state_mean, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+            labels: stars_state_list,
+            datasets: [{
+                label: 'Stars Mean by State',
+                backgroundColor: 'rgb(150, 99, 132)',
+                borderColor: 'rgb(150, 99, 132)',
+                data: stars_state_mean_list
+            }]
+        },
+        // Configuration options go here
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 5
+              }
+            }]
+          }
+        }
+
+    });
+
+
+
+    var ctx_review_length_count = document.getElementById('review_length_count_chart').getContext('2d');
+    var chart_review_length_count = new Chart(ctx_review_length_count, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: review_length_label.reverse(),
+            datasets: [{
+                label: 'Distribution of Reviews by length',
+                backgroundColor: 'rgb(20, 200, 70)',
+                borderColor: 'rgb(20, 200, 70)',
+                data: review_length_label_count.reverse()
+            }]
+        },
+        // Configuration options go here
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 100000
+              }
+            }]
+          }
+
+        }
+
+    });
+
+
+
+    //TODO : Categories Word Cloud
+
+var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+
+KoolChart.create("chart1", "allWordsCloudHolder", chartVars, "100%", "100%");
+
+function chartReadyHandler(id) {
+  document.getElementById(id).setLayout(layoutStr);
+  document.getElementById(id).setData(makeData());
+}
+
+var layoutStr =
+  '<KoolChart backgroundColor="#FFFFFF"  borderStyle="none" fontFamily="Noto Sans">'
+   +'<WordCloudChart showDataTips="true">'
+    +'<series>'
+     +'<WordCloudSeries textField="text" weightField="weight">'
+      +'<showDataEffect>'
+       +'<SeriesInterpolate duration="1000"/>'
+      +'</showDataEffect>'
+      +'<fills>'
+       +'<SolidColor color="#5586a4"/>'
+       +'<SolidColor color="#40b2e6"/>'
+       +'<SolidColor color="#ffa123"/>'
+       +'<SolidColor color="#595c7b"/>'
+       +'<SolidColor color="#ef8075"/>'
+       +'<SolidColor color="#f8ba03"/>'
+       +'<SolidColor color="#03b79a"/>'
+       +'<SolidColor color="#a5d4e6"/>'
+       +'<SolidColor color="#b79d7c"/>'
+       +'<SolidColor color="#9e589e"/>'
+      +'</fills>'
+     +'</WordCloudSeries>'
+    +'</series>'
+   +'</WordCloudChart>'
+  +'</KoolChart>';
+
+
+ function makeData(){
+  var i, n,
+   chartData = [];
+
+  for(i = 0, n = all_word_cloud_words.length ; i < n ; i += 1){
+   chartData.push({
+    text : all_word_cloud_words[i],
+    weight : all_word_cloud_counts[i]
+   });
+   console.log(all_word_cloud_words[i], all_word_cloud_counts[i]);
+  }
+
+  return chartData;
+ };
+
+
+
+
+var chartVars = "KoolOnLoadCallFunction=chartReadyHandler2";
+
+KoolChart.create("chart2", "foodWordsCloudHolder", chartVars, "100%", "100%");
+
+
+function chartReadyHandler2(id) {
+  document.getElementById(id).setLayout(layoutStr);
+  document.getElementById(id).setData(makeData2());
+}
+
+var layoutStr =
+  '<KoolChart backgroundColor="#FFFFFF"  borderStyle="none" fontFamily="Noto Sans">'
+   +'<WordCloudChart showDataTips="true">'
+    +'<series>'
+     +'<WordCloudSeries textField="text" weightField="weight">'
+      +'<showDataEffect>'
+       +'<SeriesInterpolate duration="1000"/>'
+      +'</showDataEffect>'
+      +'<fills>'
+       +'<SolidColor color="#5586a4"/>'
+       +'<SolidColor color="#40b2e6"/>'
+       +'<SolidColor color="#ffa123"/>'
+       +'<SolidColor color="#595c7b"/>'
+       +'<SolidColor color="#ef8075"/>'
+       +'<SolidColor color="#f8ba03"/>'
+       +'<SolidColor color="#03b79a"/>'
+       +'<SolidColor color="#a5d4e6"/>'
+       +'<SolidColor color="#b79d7c"/>'
+       +'<SolidColor color="#9e589e"/>'
+      +'</fills>'
+     +'</WordCloudSeries>'
+    +'</series>'
+   +'</WordCloudChart>'
+  +'</KoolChart>';
+
+
+ function makeData2(){
+  var i, n,
+   chartData = [];
+
+  for(i = 0, n = food_word_cloud_words.length ; i < n ; i += 1){
+   chartData.push({
+    text : food_word_cloud_words[i],
+    weight : food_word_cloud_counts[i]
+   });
+   console.log(food_word_cloud_words[i], food_word_cloud_counts[i]);
+  }
+
+  return chartData;
+ };
+
+
+
+
+
+
+
+   </script>
+
+
+  </body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Flask Tutorial</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static',    filename='css/template.css') }}"> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+   <link rel="stylesheet" href="https://www.koolchart.com/demo/KoolChart/Assets/Css/KoolChart.css"/>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+<style type="text/css">
+  .invisible {
+    display: none !important;
+  }
+
+  .visible {
+    display: block;
+  }
+
+
+</style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1> Office Location Picker </h1>
+          <h4 style="color: red">Click on the map to view summary of the selected area</h4>
+          <!-- <input id="sweet_spot_toggle_btn" type="button" class="btn btn-primary" style="margin-bottom: 10px; float: right" value="Toggle Sweet Spots"> -->
+        </div>
+        <div class="col-md-8 text-right">
+          <input id="sweet_spot_toggle_btn" type="button" class="btn btn-primary" style="margin-bottom: 10px;" value="Toggle Sweet Spots">
+          <div id="map_layer" style="height: 600px"></div>  
+          <br><br>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center">
+            <h4>INFORMATION</h4>  
+          </div>
+            
+          <h5>MAP</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Green areas denote "sweet spots" - good spots for an office location</li>
+            <li class="list-group-item">You can drag the map to move or zoom in/out</li>
+            <li class="list-group-item">Sweet spot visibility can be turned on or off by pressing on "Toggle Sweet Spots" buttton on top</li>
+            <li class="list-group-item">Click on the map to select a region and see the summary below (there might be a delay)</li>
+            <li class="list-group-item">You should see Best businesses as green circles, Good as yellow and Unsatisfactory as red on the map</li>
+          </ul>
+          <h5>Summary</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Word Cloud provides keywords associated with the area selected (No Data if no businesses found)</li>
+            <li class="list-group-item">Radar Chart displays the ratings (range 0.0 to 5.0) of the selected area based on number of places, their diversity, and their average star ratings</li>
+            <li class="list-group-item">User Review Highlights displays some of the highlights from reviews given to businesses in the selected area</li>
+          </ul>
+
+
+        </div>
+        <div class="col-md-12 text-center">
+          <h3>Summary</h3>
+          <h4 style="color: red">Click on the map and wait to view summary of the selected area</h4>
+          <br>
+        </div>
+        <div class="col-md-7">
+          <h3></h3>
+          <div id="wordCloudHolder" style="height:300px; width:100%;"></div>
+        </div>
+        <div class="col-md-5">
+          <h3></h3>
+          <canvas id="area_radar" style="height:300px; width:100%;"></canvas>
+        </div>
+        <div class="col-md-12">
+          <br><br><br><br>
+        </div>
+        <div class="col-md-12 text-center">
+          <h3>User Review Highlights</h3>
+          <br>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div id="quote_container" class="col-md-8 invisible">
+          <blockquote class="blockquote text-center">
+            <p class="mb-0" id="bqp1"></p>
+            <footer class="blockquote-footer" id="bqf1"></footer>
+          </blockquote>
+          <blockquote class="blockquote text-center">
+            <p class="mb-0" id="bqp2"></p>
+            <footer class="blockquote-footer" id="bqf2"></footer>
+          </blockquote>
+          <blockquote class="blockquote text-center">
+            <p class="mb-0" id="bqp3"></p>
+            <footer class="blockquote-footer" id="bqf3"></footer>
+          </blockquote>
+          <blockquote class="blockquote text-center">
+            <p class="mb-0" id="bqp4"></p>
+            <footer class="blockquote-footer" id="bqf4"></footer>
+          </blockquote>
+          <blockquote class="blockquote text-center">
+            <p class="mb-0" id="bqp5"></p>
+            <footer class="blockquote-footer" id="bqf5"></footer>
+          </blockquote>
+          <br><br><br><br><br><br>
+          <div class="col-md-2">
+          </div>
+
+        </div>
+      </div>
+      
+    </div>
+    
+     
+    
+
+
+    
+
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+   	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+   	crossorigin=""></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://www.koolchart.com/demo/LicenseKey/codepen/KoolChartLicense.js"></script>
+  <script src="https://www.koolchart.com/demo/KoolChart/JS/KoolChart.js"></script>
+
+ 	
+  <script type="text/javascript">
+
+    var word_cloud_words = ["NO DATA"];
+    var word_cloud_counts = [100];
+
+    var blocquote_pids = ["bqp1", "bqp2", "bqp3", "bqp4", "bqp5"]
+    var blocquote_fids = ["bqf1", "bqf2", "bqf3", "bqf4", "bqf5"]
+
+    var thedata_;
+
+    var sweet_spot_toggle = 1
+   	var mymap = L.map('map_layer').setView([43.6054989743,-79.652288909], 14);
+
+   	var thelayer = L.tileLayer(
+   		'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', 
+   		{
+   			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+   			maxZoom: 18,
+   			id: 'mapbox.streets',
+   			accessToken: 'pk.eyJ1IjoiYm9sYXRhc2hpbSIsImEiOiJjanYwcHA1dzMwa2E1M3prY3RiMDNyMXhsIn0.IL3Hm46xAwAP-AFDbPHKng'
+   		}).addTo(mymap);
+
+
+    var sweet_spot_layers = [];
+    var all_sweet_spots = '{{all_sweet_spots}}';
+    var all_sweet_spots = JSON.parse(all_sweet_spots);
+
+
+   	var business_layers = [];
+    function draw_businesses(coordinates) {
+   		for (var i = 0; i < (coordinates.length-1); i++) {
+        // if (i > 30) {
+        //   break;
+        // }
+   			var rating = coordinates[i][2];
+   			var color = 'red'
+        var radius = 30
+   			if (rating >= 4.0) {
+   				color = 'green';
+          radius = 20
+   			} else if (rating >= 3.0) {
+   				color = 'yellow';
+          radius = 25
+   			}
+   			var bsns = L.circle([coordinates[i][0],coordinates[i][1]], radius, {
+          color: color, weight:10, opacity:1.0}).addTo(mymap);
+   			business_layers.push(bsns);
+   		}
+   	}
+
+
+    function display_highlights() {
+      $("#quote_container").removeClass("invisible");
+      $("#quote_container").removeClass("visible");
+      $("#quote_container").addClass("visible");
+    }
+
+    function hide_highlights() {
+      $("#quote_container").removeClass("visible");
+      $("#quote_container").removeClass("invisible");
+      $("#quote_container").addClass("invisible");
+    }
+
+    function draw_sweet_spots(coordinates, quality) {
+
+      var color;
+      var opacity;
+      var radius;
+
+      if (quality="best") {
+        color = '#7FFF00'
+        opacity = 0.05
+        radius = 300
+      } else if (quality="better") {
+        color = '#7FFF00'
+        opacity = 0.03
+        radius = 200
+      } else {
+        color = '#7FFF00'
+        opacity = 0.01
+        radius = 100
+      }
+
+      for (var i = 0; i < coordinates.length; i+=3) {
+        var spot = L.circle([coordinates[i][0],coordinates[i][1]], radius, { color: color, weight: 0, opacity: opacity}).addTo(mymap);
+        sweet_spot_layers.push(spot);
+      }
+    }
+
+
+
+   	var marker;
+		var rectngl;
+
+    function clean_map() {
+
+      if (marker) {
+        mymap.removeLayer(marker);
+      }
+
+      if (rectngl) {
+        mymap.removeLayer(rectngl);  
+      }
+
+      if (business_layers.length > 0) {
+        for (var i = 0; i < business_layers.length; i++) {
+          mymap.removeLayer(business_layers[i]);
+        }
+        business_layers = [];
+      }      
+    }
+
+    function clear_sweet_spots() {
+      for (var i = 0; i < sweet_spot_layers.length; i++) {
+        mymap.removeLayer(sweet_spot_layers[i]);
+      }
+      sweet_spot_layers = []
+    }
+
+
+
+    function populate_blockquotes(paragraphs, footers) {
+
+      display_highlights();
+
+      for (var i = 0; i < paragraphs.length && i < 5; i++) {
+        document.getElementById(blocquote_pids[i]).innerHTML = paragraphs[i];
+      }
+
+      for (var i = 0; i < footers.length && i < 5; i++) {
+        document.getElementById(blocquote_fids[i]).innerHTML = footers[i];
+      }      
+
+    }
+
+
+
+
+
+
+    var pars = [];
+    var foots = [];
+
+
+		mymap.on('click', function(e) {
+			var lat = e.latlng.lat
+			var lng = e.latlng.lng
+
+      clean_map();
+      hide_highlights();
+
+			marker = L.marker([lat, lng]).addTo(mymap);
+
+			// approximation for square box coordinates given latitude and longitude 
+			half_km_lng = 0.7/(Math.cos(lat * Math.PI / 180) * 111.320)
+			half_km_lat = 0.7/110.574
+
+			rectngl = L.rectangle([ 
+				[lat - half_km_lat, lng - half_km_lng], 
+				[lat + half_km_lat, lng + half_km_lng]],
+				{color: "#ff7800", weight: 1}).addTo(mymap);
+
+      
+      var lat_top = lat + half_km_lat;
+      var lat_bot = lat - half_km_lat;
+      var lng_top = lng + half_km_lng;
+      var lng_bot = lng - half_km_lng;
+
+      //flask send
+      args_data = "lat_top=" + lat_top + "&lat_bot=" + lat_bot + 
+                  "&lng_top=" + lng_top + "&lng_bot=" + lng_bot;
+      $.ajax({
+          type: "POST",
+          crossDomain: true,
+          url: "action?" + args_data,
+          success: function(data) {
+            var data_ = JSON.parse(data);
+            console.log(data_)
+            if (data_[0] > 0) {
+              draw_businesses(data_[2]);
+            }
+
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "local_word_cloud",
+                success: function(data) {
+                  word_cloud_words = [];
+                  word_cloud_counts = [];
+                  if (data == "NOTHING") {
+                    word_cloud_words.push("NO DATA");
+                    word_cloud_counts.push(100);
+                    var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+                    KoolChart.create("chart_2", "wordCloudHolder", chartVars, "100%", "100%");
+                  } else {
+                    data = data.split("%");
+                    data = data.slice(0, data.length-1);
+                    for (var i = 0; i < data.length; i++) {
+                      split_word_count = data[i].split("$$");
+                      word_cloud_words.push(split_word_count[0]);
+                      word_cloud_counts.push(split_word_count[1]);
+                    }
+                    var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+                    KoolChart.create("chart_2", "wordCloudHolder", chartVars, "100%", "100%");
+
+                    $.ajax({
+                        type: "POST",
+                        crossDomain: true,
+                        url: "local_review_highlights",
+                        success: function(data__) {
+                          console.log(data__);
+                          if (data__ == "NOTHING") {
+                            hide_highlights();
+                          } else {
+                            thedata_ = data__;
+                            var data__ = data__.split("$$$$");
+ 
+                            
+                            var temp = data__[0].split("%%%");
+                            temp = temp.slice(0, temp.length - 1);
+                            for (var i = 0; i < temp.length; i++) {
+                              pars.push(temp[i].trim());
+                            }
+                            temp = data__[1].split("%%%");
+                            temp = temp.slice(0, data__[1].length-1);
+                            for (var i = 0; i < temp.length; i++) {
+                              foots.push(temp[i].trim());
+                            }
+                            console.log(pars);
+                            console.log(foots);
+                            populate_blockquotes(pars, foots);
+                            display_highlights();
+                          }
+                          
+                        }
+                    });
+
+
+                  }
+                  
+                  var area_rating = data_[1];
+                  var area_diversity = ((word_cloud_words.length - 1)/20.0)*5.0;
+                  var area_total = data_[0]/10.0;
+                  
+                  if (area_total > 5.0){
+                    area_total = 5.0;
+                  }
+                  
+                  update_radar(area_rating, area_diversity, area_total);
+                }
+            });
+
+          }
+      });
+
+
+		});
+
+    function show_sweet_spots() {
+      draw_sweet_spots(all_sweet_spots[0], "good");
+      draw_sweet_spots(all_sweet_spots[1], "better");
+      draw_sweet_spots(all_sweet_spots[2], "best");
+    }
+
+    show_sweet_spots();
+    
+    $("#sweet_spot_toggle_btn").click(function(){
+      if (sweet_spot_toggle) {
+        clear_sweet_spots();
+        sweet_spot_toggle = 0;
+      } else {
+        show_sweet_spots();
+        sweet_spot_toggle = 1;
+      }
+    });
+
+var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+KoolChart.create("chart_2", "wordCloudHolder", chartVars, "100%", "100%");
+
+function chartReadyHandler(id) {
+  document.getElementById(id).setLayout(layoutStr);
+  document.getElementById(id).setData(makeData());
+}
+
+
+var layoutStr =
+  '<KoolChart backgroundColor="#FFFFFF"  borderStyle="none" fontFamily="Noto Sans">'
+   +'<WordCloudChart showDataTips="true">'
+    +'<series>'
+     +'<WordCloudSeries textField="text" weightField="weight">'
+      +'<showDataEffect>'
+       +'<SeriesInterpolate duration="1000"/>'
+      +'</showDataEffect>'
+      +'<fills>'
+       +'<SolidColor color="#5586a4"/>'
+       +'<SolidColor color="#40b2e6"/>'
+       +'<SolidColor color="#ffa123"/>'
+       +'<SolidColor color="#595c7b"/>'
+       +'<SolidColor color="#ef8075"/>'
+       +'<SolidColor color="#f8ba03"/>'
+       +'<SolidColor color="#03b79a"/>'
+       +'<SolidColor color="#a5d4e6"/>'
+       +'<SolidColor color="#b79d7c"/>'
+       +'<SolidColor color="#9e589e"/>'
+      +'</fills>'
+     +'</WordCloudSeries>'
+    +'</series>'
+   +'</WordCloudChart>'
+  +'</KoolChart>';
+
+
+ function makeData(){
+  var i, n,
+   chartData = [];
+  
+  for(i = 0, n = word_cloud_words.length ; i < n ; i += 1){
+   chartData.push({
+    text : word_cloud_words[i],
+    weight : word_cloud_counts[i]
+   });
+   
+  }
+  return chartData;
+ };
+
+
+
+
+
+  function update_radar(rating, diversity, total_num) {
+    var ctx_area_radar = document.getElementById('area_radar').getContext('2d');
+    var chart_area_radar = new Chart(ctx_area_radar, {
+        // The type of chart we want to create
+        type: 'radar',
+        // The data for our dataset
+        data: {
+
+            labels: ['Average Rating', 'Diversity', 'Total Number'],
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            datasets: [{
+                label: 'Rating of the Selected Area',
+                data: [rating, diversity, total_num]
+            }]
+        },
+        // Configuration options go here
+        options: {
+          responsive: true,
+          scale: {
+            ticks: {
+              min: 0.0,
+              max: 5.0
+            },
+            pointLabels: {
+              fontSize: 20
+            }
+          },
+        }
+    }); 
+  }
+
+  update_radar(0, 0, 0);
+
+
+
+
+
+   </script>
+
+
+  </body>
+</html>
