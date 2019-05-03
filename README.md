@@ -8,4 +8,4 @@
 
 ### Install Python Dependencies in requirements.txt
 
-### Run the application through  ```python3 app.py```
+### Run the application calling  ```python3 app.py```
